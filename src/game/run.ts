@@ -203,18 +203,28 @@ export function buyRelic(run: RunState, offer: number): ShopError | null {
   if (run.gold < relicCost(id)) return 'gold';
   if (run.relics.length >= ECONOMY.maxRelics) return 'relics';
   run.gold -= relicCost(id);
-  run.relics.push(id);
+  addRelic(run, id);
   run.shop.relics[offer] = null;
-  fixCommands(run);
   return null;
 }
 
 export function grantRelic(run: RunState, id: RelicId): boolean {
   if (run.relics.includes(id)) return false;
   if (run.relics.length >= ECONOMY.maxRelics) run.relics.shift();
+  addRelic(run, id);
+  return true;
+}
+
+/** Add a relic and auto-equip any command it unlocks (replacing the last base command if full). */
+function addRelic(run: RunState, id: RelicId) {
+  const before = availableCommands(run);
   run.relics.push(id);
   fixCommands(run);
-  return true;
+  for (const c of availableCommands(run)) {
+    if (before.includes(c) || run.commands.includes(c)) continue;
+    if (run.commands.length >= commandSlots(run)) run.commands.pop();
+    run.commands.push(c);
+  }
 }
 
 export function sellUnit(run: RunState, slot: number): boolean {

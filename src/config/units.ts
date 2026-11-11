@@ -114,7 +114,7 @@ export const UNITS: Record<UnitId, UnitDef> = {
   monk: def({
     id: 'monk', name: 'Monk', tags: ['Arcane', 'Support'], role: 'Follows the army and heals the most hurt ally nearby.',
     behavior: 'support', weapon: 'staff', accent: '#ffd35a',
-    cost: 5, count: 3, hp: 26, dmg: 8, cooldown: 1.0, range: 80, speed: 38,
+    cost: 5, count: 3, hp: 26, dmg: 12, cooldown: 1.0, range: 100, speed: 38,
   }),
   mage: def({
     id: 'mage', name: 'Mage', tags: ['Arcane', 'Ranged'], role: 'Lobs exploding bolts that hit a whole crowd.',

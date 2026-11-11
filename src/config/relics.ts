@@ -133,14 +133,14 @@ export const RELICS: RelicDef[] = [
     id: 'catapult_arms', name: 'Catapult Arms', icon: '🏋️', rarity: 'uncommon',
     desc: 'Giants throw the stickmen they hit. Thrown stickmen crash down, damaging their own army.',
     combo: 'Titan Blood throws them further.',
-    apply: (m, p) => { m.giantThrow = Math.max(m.giantThrow, 0.6 * p); },
+    apply: (m, p) => { m.giantThrow = Math.max(m.giantThrow, 1.0 * p); },
     label: (n) => `Thrown ×${n}`,
   },
   {
     id: 'blood_frenzy', name: 'Blood Frenzy', icon: '😡', rarity: 'uncommon',
-    desc: 'Berserker rage is tripled, and they heal 25% HP on every kill.',
+    desc: 'Berserker rage is tripled, and they heal 40% HP on every kill.',
     combo: 'Monks keep them topped up... or not.',
-    apply: (m, p) => { m.rageMult *= Math.pow(3, p); m.rageHeal += 0.25 * p; },
+    apply: (m, p) => { m.rageMult *= Math.pow(3, p); m.rageHeal += 0.4 * p; },
     label: (n) => `Frenzy ×${n}`,
   },
   {
@@ -158,9 +158,9 @@ export const RELICS: RelicDef[] = [
   },
   {
     id: 'war_chant', name: 'War Chant', icon: '🎶', rarity: 'uncommon',
-    desc: 'Every Monk heal also gives the ally +15% damage (stacks 5 times).',
+    desc: 'Monks heal 50% more, and every heal gives the ally +25% damage (stacks 5 times).',
     combo: 'Monks behind Berserkers.',
-    apply: (m, p) => { m.chant = 0.15 * p; },
+    apply: (m, p) => { m.chant = 0.25 * p; m.dmg.Support *= Math.pow(1.5, p); },
     label: (n) => `Chant ×${n}`,
   },
   {

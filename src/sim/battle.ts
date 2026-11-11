@@ -459,12 +459,12 @@ export class Battle {
       const st = this.sideSetup(s).slots[this.slot[t]] ?? null;
       if (st) {
         const g = this.gen[t] + 1;
-        const shrink = sm.swarmNoShrink ? 1 : Math.pow(0.75, g);
+        const shrink = sm.swarmNoShrink ? 1 : Math.pow(0.6, g);
         for (let k = 0; k < 2; k++) {
           const j = this.spawn(s, st, this.slot[t], x + this.rng.range(-6, 6), Math.min(WORLD.laneDepth, Math.max(0, y + this.rng.range(-8, 8))), g);
           if (j < 0) break;
           this.hp[j] = this.maxHp[j] = st.hp * shrink;
-          this.dmg[j] = st.dmg * (sm.swarmNoShrink ? 1 : Math.pow(0.85, g));
+          this.dmg[j] = st.dmg * (sm.swarmNoShrink ? 1 : Math.pow(0.75, g));
           this.size[j] = st.size * (sm.swarmNoShrink ? 1 : Math.pow(0.88, g));
           // pop out of the dying one
           this.state[j] = 2;
@@ -612,7 +612,7 @@ export class Battle {
             for (let k = 0; k < 2; k++) {
               const nt = this.pickRangedTarget(0, x - 30, 160);
               if (nt < 0) break;
-              this.fireArrowFrom(0, x, y, 16, nt, this.pDmg[p] * 0.8, this.pGen[p] + 1, 1);
+              this.fireArrowFrom(0, x, y, 16, nt, this.pDmg[p], this.pGen[p] + 1, 1);
             }
             this.trig('hail_of_arrows', 2);
           }
@@ -626,7 +626,7 @@ export class Battle {
     } else if (kind === PK.Body) {
       // thrown corpse lands on its own army (es = thrower's enemy)... pSide = thrower side
       this.ev(EV.Land, x, y, this.pDmg[p]);
-      this.aoeDamage(s, x, y, 24, this.pDmg[p], -1, 0.5, 12);
+      this.aoeDamage(s, x, y, 30, this.pDmg[p], -1, 0.5, 12);
     } else if (kind === PK.Meteor) {
       this.ev(EV.Meteor, x, y, 70);
       this.aoeDamage(s, x, y, 70, this.pDmg[p], -1, 1.6, 80);
@@ -809,7 +809,7 @@ export class Battle {
             this.flags[i] &= ~F_THROWN;
             // land on own army: damage dealt by the thrower's side
             this.ev(EV.Land, this.x[i], this.y[i], this.thrownDmg[i]);
-            this.aoeDamage(1 - s, this.x[i], this.y[i], 22, this.thrownDmg[i], -1, 0, 10);
+            this.aoeDamage(1 - s, this.x[i], this.y[i], 30, this.thrownDmg[i], -1, 0, 12);
             this.damage(i, this.thrownDmg[i] * 0.5, -1);
             if (s === 1) this.trig('catapult_arms');
           }
