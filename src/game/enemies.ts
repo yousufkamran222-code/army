@@ -27,7 +27,7 @@ const THEMES: Theme[] = [
   { name: 'War Band', weights: { swordsman: 2, shieldbearer: 2, archer: 2, berserker: 1, mage: 1, spearman: 1, giant: 1 } },
 ];
 
-const ORDER: Record<string, number> = { shieldbearer: 0, giant: 1, spearman: 2, swordsman: 3, berserker: 3, swarmling: 4, warlord: 5, golem: 1, monk: 6, archer: 7, mage: 8, necromancer: 9 };
+const ORDER: Record<string, number> = { shieldbearer: 0, giant: 1, spearman: 2, swordsman: 3, berserker: 3, swarmling: 4, warlord: 10, golem: 1, monk: 6, archer: 7, mage: 8, necromancer: 9 };
 
 export function generateEnemy(runSeed: number, battle: number): EnemyArmy {
   const rng = new Rng(hashSeed(runSeed, 'enemy', battle));
@@ -35,12 +35,18 @@ export function generateEnemy(runSeed: number, battle: number): EnemyArmy {
   const boss: UnitId | null = isBoss ? (battle === ENEMY.bossBattles[0] ? 'warlord' : 'golem') : null;
   const themePool = battle <= 2 ? THEMES.filter((t) => ['Blade Horde', 'Shield Wall', 'Swarm Nest'].includes(t.name)) : THEMES;
   const theme = rng.pick(themePool);
-  let budget = ENEMY.budget(battle) * (isBoss ? 0.75 : 1);
+  let budget = ENEMY.budget(battle) * (isBoss ? 0.65 : 1);
   const slots: ArmySlot[] = [];
   const types = Object.keys(theme.weights) as UnitId[];
   let guard = 0;
   while (guard++ < 100) {
-    const affordable = types.filter((t) => UNITS[t].cost <= budget && (slots.length < 5 || slots.some((s) => s.type === t)));
+    const affordable = types.filter(
+      (t) =>
+        UNITS[t].cost <= budget &&
+        (slots.length < 5 || slots.some((s) => s.type === t)) &&
+        // giants are scary early: cap their copies by battle
+        (t !== 'giant' || (slots.find((s) => s.type === 'giant')?.copies ?? 0) < Math.floor(battle / 3)),
+    );
     if (!affordable.length) break;
     const t = rng.weighted(affordable, (u) => theme.weights[u]!);
     const owned = slots.find((s) => s.type === t);

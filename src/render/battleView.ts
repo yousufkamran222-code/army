@@ -558,7 +558,7 @@ export class BattleView {
           this.shake = Math.max(this.shake, JUICE.shakeHeavy);
           this.fxA.add(fx.ring, x, y - 30, 0, 0, 0, 0.7, 0.5, 9 / A.res, 0xffcf3a, 1);
           sfx.play('horn');
-          this.hooks.onBanner?.('WAR CRY! Enemies ×2 damage', '#ffcf3a');
+          this.hooks.onBanner?.('WAR CRY! Enemies ×1.5 damage', '#ffcf3a');
           break;
         case EV.Land:
           this.fxN.add(fx.dust, x, y, 0, -10, 0, 0.5, 0.6, 1.5, 0xd8c8a0, 0.8);

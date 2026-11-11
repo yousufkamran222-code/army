@@ -1,7 +1,7 @@
 // Deterministic, render-agnostic battle simulation.
 // Struct-of-arrays + x-bins so thousands of stickmen stay cheap.
 
-import { SIM, WORLD, JUICE } from '../config/tuning';
+import { SIM, WORLD, JUICE, ENEMY } from '../config/tuning';
 import { UNITS, UNIT_IDS, UNIT_INDEX, BOSS, type Behavior, type UnitId } from '../config/units';
 import { COMMANDS, type CommandId } from '../config/commands';
 import { Rng } from './rng';
@@ -420,7 +420,8 @@ export class Battle {
     const fl = this.flags[t];
     this.ev(EV.Death, x, y, ty + s * 32, kvx, kvz + this.z[t], this.size[t]);
 
-    if (!(fl & F_MINION) && !(fl & F_BOSS)) {
+    if (!(fl & F_BOSS)) {
+      // minions leave corpses too, so a necromancer army keeps re-raising itself
       if (this.corpses.length >= SIM.maxCorpses) this.corpses.shift();
       this.corpses.push({ x, y, t: this.time, type: ty, side: s });
     }
@@ -948,18 +949,23 @@ export class Battle {
         if (dist <= range) {
           this.state[i] = 1;
           if (dist < 35 && hasEnemy) this.moveBack(i, s, dt);
-          if (this.cool[i] <= 0) {
+          const t0 = this.cool[i] <= 0 && hasEnemy ? this.pickRangedTarget(s, x, range) : -1;
+          if (this.cool[i] <= 0 && hasEnemy && t0 < 0) this.cool[i] = 0.2; // nothing in reach yet
+          else if (this.cool[i] <= 0) {
             this.cool[i] = this.cooldown[i] * this.rng.range(0.9, 1.15);
             this.anim[i] = 0.3;
             if (beh === 1) {
               const n = 1 + this.extraArrows(i);
-              for (let k = 0; k < n; k++) this.fireArrow(i, hasEnemy ? this.pickRangedTarget(s, x, range) : -1, n > 1 ? 1.5 : 0);
+              for (let k = 0; k < n; k++) {
+                const tk = k === 0 || !hasEnemy ? t0 : this.pickRangedTarget(s, x, range);
+                this.fireArrow(i, tk < 0 && hasEnemy ? t0 : tk, n > 1 ? 1.5 : 0);
+              }
               this.ev(EV.Shoot, x, this.y[i], PK.Arrow, s, n);
               if (n > 1) this.trig('shield_quiver', n - 1);
             } else if (beh === 2) {
-              this.fireBolt(i, hasEnemy ? this.pickRangedTarget(s, x, range) : -1);
+              this.fireBolt(i, t0);
             } else {
-              const t = hasEnemy ? this.pickRangedTarget(s, x, range) : -1;
+              const t = t0;
               const tx = t >= 0 ? this.x[t] : tgtX;
               const ttl = Math.max(0.3, Math.abs(tx - x) / SIM.boltSpeed);
               this.newProj(PK.Dark, s, x, this.y[i], 24, tx, t >= 0 ? this.y[t] : 60, ttl, this.dmg[i] * this.unitMult(i, t), 0, t);
@@ -1083,7 +1089,7 @@ export class Battle {
   }
 
   private setupStatMult(): number {
-    return 1 + 0.07 * (this.setup.battleIndex - 1);
+    return ENEMY.statMult(this.setup.battleIndex);
   }
 
   private necroTick(i: number, s: number, dt: number) {

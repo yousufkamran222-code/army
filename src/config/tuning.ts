@@ -29,14 +29,14 @@ export const SIM = {
 };
 
 export const STATUE = {
-  playerHp: 600,
-  enemyHpBase: 500,
-  enemyHpPerBattle: 220,
+  playerHp: 500,
+  enemyHpBase: 300,
+  enemyHpPerBattle: 120,
 };
 
 export const ECONOMY = {
   startGold: 10,
-  baseReward: 5,
+  baseReward: 7,
   rewardPerBattle: 1, // + battleIndex
   fastWinTime: 30,
   fastWinBonus: 2,
@@ -68,8 +68,8 @@ export const ECONOMY = {
 
 export const ENEMY = {
   // gold-equivalent budget for the enemy army in battle i (1-based)
-  budget: (i: number) => Math.round(9 + 9.5 * Math.pow(i - 1, 1.3)),
-  statMult: (i: number) => 1 + 0.07 * (i - 1),
+  budget: (i: number) => Math.round(7 + 4 * (i - 1) + 0.32 * (i - 1) * (i - 1)),
+  statMult: (i: number) => 1 + 0.04 * (i - 1),
   bossBattles: [4, 8],
 };
 
