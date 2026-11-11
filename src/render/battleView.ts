@@ -581,10 +581,11 @@ export class BattleView {
         }
         case EV.Swing: {
           const sz = e[k + 3];
-          if (sz > 2.6) {
+          if (e[k + 5] === 1) {
+            // boss hit: heavy shake + brief hit-stop
             this.shake = Math.max(this.shake, JUICE.shakeHeavy);
-            this.hitStop = Math.max(this.hitStop, JUICE.hitStopBoss * 0.6);
-          } else this.shake = Math.max(this.shake, JUICE.shakeHeavy * 0.4);
+            this.hitStop = Math.max(this.hitStop, JUICE.hitStopBoss * 0.7);
+          } else this.shake = Math.max(this.shake, JUICE.shakeHeavy * (sz > 2.6 ? 0.7 : 0.4));
           this.fxN.add(fx.dust, x, y, 0, -10, 0, 0.5, 0.6, 1.6 * sz * 0.5, 0xd8c8a0, 0.7);
           sfx.play('thud', 0.7);
           break;

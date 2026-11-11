@@ -682,6 +682,9 @@ button.gold {
 .relicic.uncommon {
   border-color: rgba(90, 208, 138, 0.55);
 }
+.relicic:nth-child(even) .rlabel {
+  bottom: 150%;
+}
 .relicic.pulse {
   animation: pulse 0.35s ease-out;
 }

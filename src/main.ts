@@ -6,7 +6,8 @@ import { sfx } from './audio/sfx';
 import { setAtlas, h, hideTip } from './ui/dom';
 import { renderShop } from './ui/shop';
 import { Hud } from './ui/hud';
-import { renderDebug, renderReward, renderSummary, renderTitle, preset } from './ui/screens';
+import { renderDebug, renderReward, renderSummary, renderTitle } from './ui/screens';
+import { preset } from './game/presets';
 import { newRun, battleSetup, finishBattle, jumpToBattle, isBossBattle, addUnit, grantRelic, type RunState } from './game/run';
 import { UNITS } from './config/units';
 import type { BattleResult } from './sim/types';
@@ -21,7 +22,8 @@ async function boot() {
     resizeTo: window,
     antialias: false,
     backgroundColor: 0x161c2b,
-    resolution: Math.min(window.devicePixelRatio || 1, 2),
+    // phones: cap at 1.5x to save fill-rate (stickmen are drawn from a 2x atlas anyway)
+    resolution: Math.min(window.devicePixelRatio || 1, matchMedia('(pointer: coarse)').matches ? 1.5 : 2),
     autoDensity: true,
     powerPreference: 'high-performance',
     preference: 'webgl',
@@ -74,7 +76,21 @@ async function boot() {
     go('battle');
     ui.innerHTML = '';
     demo = null;
-    battle = new Battle(battleSetup(run));
+    const setup = battleSetup(run);
+    if (params.get('mirror')) {
+      // benchmark helper: the enemy gets a copy of your army (huge symmetric clash)
+      setup.enemy.slots = setup.player.slots.map((x) => ({ ...x }));
+      setup.enemy.mods = setup.player.mods;
+      setup.enemy.minion = setup.player.minion;
+      setup.enemy.statueHp = 5000;
+    }
+    battle = new Battle(setup);
+    if (params.get('prewarm')) {
+      // benchmark helper: fast-forward headlessly to the moment the armies clash
+      battle.emitEvents = false;
+      while (battle.tick < 1500 && (battle.deploying || battle.front[1] - battle.front[0] > 30)) battle.step();
+      battle.emitEvents = true;
+    }
     view.start(battle);
     view.paused = false;
     view.speed = speed;
@@ -205,6 +221,8 @@ async function boot() {
     if (params.get('preset')) preset(run, params.get('preset') as never);
     if (params.get('relics')) for (const r of params.get('relics')!.split(',')) grantRelic(run, r as never);
     if (params.get('battle')) jumpToBattle(run, Number(params.get('battle')));
+    // e.g. extra=swarmling:9,swordsman:9 (adds unit copies; used by the perf benchmark)
+    if (params.get('extra')) for (const kv of params.get('extra')!.split(',')) addUnit(run, kv.split(':')[0] as never, Number(kv.split(':')[1] ?? 1));
     if (params.get('gold')) run.gold = Number(params.get('gold'));
     if (params.get('speed')) speed = Number(params.get('speed'));
     if (params.get('numbers') === '0') view.showNumbers = false;

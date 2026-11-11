@@ -149,7 +149,7 @@ export const UNITS: Record<UnitId, UnitDef> = {
   golem: def({
     id: 'golem', name: 'Siege Golem', tags: ['Boss', 'Brute'], role: 'BOSS. Slams the front line every 6s, crushing and flinging everything nearby.',
     behavior: 'golem', weapon: 'golem', accent: '#9aa0a8', buyable: false,
-    cost: 0, count: 1, hp: 1800, dmg: 34, cooldown: 2.0, reach: 44, speed: 14, armor: 0.4, size: 3.3, aoe: 50, knock: 1.0, big: true,
+    cost: 0, count: 1, hp: 1500, dmg: 34, cooldown: 2.0, reach: 44, speed: 14, armor: 0.4, size: 3.3, aoe: 50, knock: 1.0, big: true,
   }),
 };
 

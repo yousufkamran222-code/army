@@ -88,6 +88,6 @@ export const JUICE = {
   maxDamageNumbers: 50,
   damageNumberMinGap: 0.03,
   relicLabelWindow: 0.7,
-  cameraMinView: 640,
+  cameraMinView: 1000,
   cameraLerp: 2.2,
 };

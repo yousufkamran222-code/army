@@ -23,7 +23,7 @@ export const EV = {
   Land: 12, // x y dmg
   Command: 13, // cmdIndex
   StatueFall: 14, // side
-  Swing: 15, // x y size side (heavy swing)
+  Swing: 15, // x y size side boss (heavy swing)
 } as const;
 export const EV_STRIDE = 7;
 
@@ -277,8 +277,10 @@ export class Battle {
         const head = q[0];
         const st = side.slots[head.slot];
         const big = TYPE_BIG[UNIT_INDEX[st.type]];
-        const y = big ? WORLD.laneDepth * this.rng.range(0.4, 0.75) : this.rng.range(4, WORLD.laneDepth - 4);
-        this.spawn(s, st, head.slot, sx + this.rng.range(-8, 8), y);
+        const y = big ? WORLD.laneDepth * this.rng.range(0.2, 0.85) : this.rng.range(4, WORLD.laneDepth - 4);
+        // big units spawn staggered so a group of giants doesn't stack into one blob
+        const jx = big ? this.rng.range(-30, 10) * (s === 0 ? 1 : -1) : this.rng.range(-8, 8);
+        this.spawn(s, st, head.slot, sx + jx, y);
         if (--head.left <= 0) q.shift();
       }
     }
@@ -920,7 +922,7 @@ export class Battle {
             this.anim[i] = beh >= 5 ? 0.45 : 0.25;
             const amt = this.dmg[i] * this.unitMult(i, t);
             if (beh >= 5) {
-              this.ev(EV.Swing, x + dir * r * 0.6, this.y[i], this.size[i], s);
+              this.ev(EV.Swing, x + dir * r * 0.6, this.y[i], this.size[i], s, this.flags[i] & F_BOSS ? 1 : 0);
               this.bigSwing(i, s, amt);
             } else {
               this.damage(t, amt, i, dir * this.rng.range(20, 50), this.rng.range(40, 90));
