@@ -214,6 +214,7 @@ export class BattleView {
 
   start(b: Battle) {
     this.battle = b;
+    this.backdrop = false;
     this.acc = 0;
     this.hitStop = 0;
     this.slowMo = 0;
@@ -243,7 +244,37 @@ export class BattleView {
     this.show(true);
   }
 
+  private backdrop = false;
+  /** Show the landscape + statues without a battle (behind menus). */
+  showBackdrop() {
+    this.battle = null;
+    this.backdrop = true;
+    this.camX = WORLD.length / 2;
+    this.camW = WORLD.length + 80;
+    for (const pc of [this.unitPC, this.projPC, this.corpsePC]) {
+      pc.particleChildren.length = 0;
+      pc.update();
+    }
+    for (const r of this.ragdolls) this.ragFree.push(r.p);
+    this.ragdolls.length = 0;
+    this.fxN.clear();
+    this.fxA.clear();
+    for (const n of this.nums) {
+      n.t.visible = false;
+      this.numFree.push(n.t);
+    }
+    this.nums.length = 0;
+    for (let s = 0; s < 2; s++) {
+      const g = this.statues[s];
+      g.rotation = 0;
+      g.alpha = 1;
+      g.position.y = WORLD.laneDepth * DEPTH * 0.5 + 6;
+    }
+    this.show(true);
+  }
+
   stop() {
+    this.backdrop = false;
     this.battle = null;
     this.show(false);
   }
@@ -251,7 +282,18 @@ export class BattleView {
   // ------------------------------------------------------------------ frame
   update(dtReal: number) {
     const b = this.battle;
-    if (!b) return;
+    if (!b) {
+      if (this.backdrop) {
+        const W = this.app.screen.width;
+        const H = this.app.screen.height;
+        this.zoom = Math.min(W / this.camW, H / 250);
+        this.world.scale.set(this.zoom);
+        this.world.x = W / 2 - this.camX * this.zoom;
+        this.world.y = H * 0.6 - WORLD.laneDepth * DEPTH * 0.5 * this.zoom;
+        this.updateBackground(Math.min(dtReal, 0.1));
+      }
+      return;
+    }
     dtReal = Math.min(dtReal, 0.1);
     let scale = this.paused ? 0 : this.speed;
     if (this.slowMo > 0) {

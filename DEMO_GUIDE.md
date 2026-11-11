@@ -1,11 +1,11 @@
 # Stickstorm demo guide (for Yousuf)
 
 Play link (after the one-time Pages setup in the README): **https://yousufkamran222-code.github.io/army/**
-It works on a laptop and on a phone. On a phone, hold it **sideways** for battles. The shop works either way.
+It works on a laptop and on a phone. The whole game is **landscape**: on a phone, hold it sideways (it goes fullscreen when you start a run).
 
 ## 1. How to play (under 10 lines)
 
-1. **Shop:** spend gold on **units** (more stickmen; 3 copies = Lv 2, 9 copies = Lv 3) and **relics** (passive combo effects). Tap or hover anything to see what it does.
+1. **Shop:** spend gold on **units** (more stickmen; 3 copies = Lv 2, 9 copies = Lv 3) and **relics** (passive combo effects). Tap any card to open its detail panel (stats, Buy/Sell/Move buttons).
 2. **Drag army cards to reorder them.** Slot #1 deploys first and fights at the front. Drag relics too: **Echo Stone** doubles the relic to its right.
 3. Check the **"You vs Them" bar** and the enemy preview, then press **Fight**.
 4. The battle plays itself. You get **2 commands** (buttons at the bottom, or keys 1–4). Timing them is your job: Charge as the lines meet, Rally after a bad trade.
@@ -15,7 +15,7 @@ It works on a laptop and on a phone. On a phone, hold it **sideways** for battle
 
 ## 2. Three builds to try
 
-Look for these pieces in the shop. Reroll (🎲) if needed. If you just want to *see* a build, open the debug menu (🐞) → **Quick builds**.
+Look for these pieces in the shop. Reroll if needed. If you just want to *see* a build, open the debug menu (☰ menu → Debug) → **Quick builds**.
 
 **A. Swarm flood (the biggest numbers)**
 - Units: lots of **Swarmlings**, put in **slot #1**. Add a couple of Shieldbearers and Archers.
@@ -36,7 +36,7 @@ Look for these pieces in the shop. Reroll (🎲) if needed. If you just want to 
 
 ## 3. Debug / cheat menu
 
-Click the **🐞 button** (top right in the shop, bottom right in battle) or press the **` (backtick) key**. It lets you:
+Open the **☰ menu** (top right, in the shop and in battle) → **Debug / cheats**, or press the **` (backtick) key**. It lets you:
 - jump to any battle (1–8, bosses marked 👑)
 - add gold (+10/+50/+200)
 - add 3 copies of any unit
@@ -44,7 +44,7 @@ Click the **🐞 button** (top right in the shop, bottom right in battle) or pre
 - load a quick build (Swarm / Necro / Volley / Giants)
 - win the current battle instantly
 
-Fast way to see late-game chaos: 🐞 → Quick builds → **Swarm** → jump to **8** → Fight → try **4×**.
+Fast way to see late-game chaos: ☰ → Debug → Quick builds → **swarm** → jump to **8** → Fight → tap the speed button until it says **4×**.
 
 ## 4. Questions to answer after playing
 

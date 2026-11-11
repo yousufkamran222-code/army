@@ -485,6 +485,10 @@ export class Battle {
   }
 
   /** debug: destroy the enemy statue */
+  forceLose() {
+    if (!this.finished) this.hitStatue(0, this.statueHp[0] + 1);
+  }
+
   forceWin() {
     if (!this.finished) this.hitStatue(1, this.statueHp[1] + 1);
   }

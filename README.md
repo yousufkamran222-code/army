@@ -32,6 +32,7 @@ npm run dev        # open the printed URL (works on your phone on the same Wi-Fi
 | `npx tsx scripts/bench-sim.ts` | CPU cost of the sim with 1,500–2,400 stickmen |
 | `npx tsx scripts/debug-battle.ts greedy 4` | Tick-by-tick log of one bot battle |
 | `npm run shots` | Playwright screenshots of every screen at phone and desktop sizes (needs Playwright and Chromium installed, then `npm run build` first) |
+| `npm run e2e` | Playwright end-to-end UI test: shop fits one screen, buying doesn't move anything, drag-reorder, detail panel, sell, a full 8-battle run, a lost run, the portrait rotate prompt. Covers two phone sizes and desktop (needs `npm run build` first) |
 | `npm run perf` | Playwright frame-time benchmark of a 2,000-stickman battle |
 
 ## URL parameters (testing shortcuts)
@@ -47,7 +48,7 @@ src/config/   all tuning numbers (tuning.ts) and data-driven units, relics, comm
 src/sim/      deterministic battle simulation (battle.ts), relic mods -> stats, seeded RNG
 src/game/     run state, shop and economy (run.ts), enemy generation, power estimate, bot player, presets
 src/render/   Pixi renderer: procedural stick-figure atlas, battle view (camera, juice, FX), parallax background
-src/ui/       DOM UI: shop (drag to reorder), battle HUD, reward/summary/debug screens, tooltips
+src/ui/       Preact UI: store.ts (state + batched re-render), Shop.tsx, Hud.tsx, Screens.tsx, Menus.tsx, icons.tsx, art.tsx (atlas portraits)
 src/audio/    Web Audio synthesized sound effects
 scripts/      sim, benchmarks, screenshots
 tests/        Vitest

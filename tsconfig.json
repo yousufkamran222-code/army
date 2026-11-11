@@ -10,7 +10,9 @@
     "isolatedModules": true,
     "resolveJsonModule": true,
     "types": ["node", "vite/client"],
-    "noEmit": true
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact"
   },
   "include": ["src", "scripts", "tests"]
 }

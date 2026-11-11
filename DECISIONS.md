@@ -54,3 +54,20 @@ tests/       vitest suites
 - **Saved data:** only settings (mute, speed, damage numbers) in localStorage.
 - **Deployment:** a GitHub Actions workflow builds, type-checks and tests, then deploys `dist/` to Pages on pushes to `main` and to the working branch. Vite uses `base: './'`, so the build works under `/army/`.
 - **Playwright** isn't a project dependency. The screenshot and perf scripts use a globally installed Playwright, which keeps `npm install` small for players.
+
+## UI rebuild (after first playtest)
+
+Feedback: the UI looked messy, jumped to the top on every tap, and was confused between portrait and landscape.
+
+- **Root cause of the jump:** every action rebuilt the whole shop DOM, including its scroll container. The UI now uses **Preact** with a tiny global store (`ui/store.ts`). Actions mutate state and call `update()`, which re-renders on the next frame by diffing, so only changed elements are patched. Selection, focus and position survive every tap.
+- **Landscape only.** On phones the game requests fullscreen and a landscape lock when you start a run, where the browser allows it. In portrait, a full-screen "Turn your phone sideways" prompt covers the game. No screen scrolls. Everything is sized in `rem`, and the root font size scales with `min(vh, vw)`, so one layout fits 667×375 phones up to 1920×1080. The e2e test checks that the page height equals the viewport and that no panel is off screen.
+- **Shop on one screen:**
+  - Left column: enemy preview and power bar, the army as a formation of real stickmen (front on the right, facing the enemy; drag to reorder), and the relic bar.
+  - Right column: shop offers, commands, the Fight button.
+  - Tapping any card opens a fixed detail panel (stats and Buy/Sell/Move buttons) instead of floating tooltips.
+- **Consistent look:**
+  - One set of design tokens (colours, radii, spacing) and one button style family.
+  - A display font (Lilita One) for numbers and headings, Nunito for text.
+  - A hand-made SVG line-icon set for every relic, command and control, replacing emoji, which look different on every phone.
+- **The battle HUD** keeps statue bars and alive counts top-left and top-right, the boss bar top-centre, and speed/pause/menu in the corner. Big command buttons show READY/ACTIVE/USED. The relic tray pulses with labels.
+- **Menus** show the landscape scene (`BattleView.showBackdrop()`) behind a dark overlay, so the game never shows a flat empty screen.
