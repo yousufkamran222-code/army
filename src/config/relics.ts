@@ -165,8 +165,8 @@ export const RELICS: RelicDef[] = [
   },
   {
     id: 'titan_blood', name: 'Titan Blood', icon: '🧬', rarity: 'uncommon',
-    desc: 'Giants are ×1.35 bigger with ×2 HP, and knock stickmen ×1.5 further.',
-    apply: (m, p) => { m.giantSize *= Math.pow(1.35, p); m.giantHp *= Math.pow(2, p); m.knockMult *= Math.pow(1.5, p); },
+    desc: 'Giants are ×1.25 bigger with ×2 HP, and knock stickmen ×1.5 further.',
+    apply: (m, p) => { m.giantSize *= Math.pow(1.25, p); m.giantHp *= Math.pow(2, p); m.knockMult *= Math.pow(1.5, p); },
     label: (n) => `Titan ×${n}`,
   },
   {

@@ -34,7 +34,7 @@ export function unitStats(type: UnitId, copies: number, mods: Mods, statMult = 1
   const lm = Math.pow(ECONOMY.levelStatMult, level - 1);
   const tags = [...d.tags, ...extraTags];
   let hp = d.hp * lm * statMult * tagProduct(mods.hp, tags);
-  let size = d.size * Math.pow(ECONOMY.levelSizeMult, level - 1);
+  let size = d.size * Math.pow(d.big ? 1.05 : ECONOMY.levelSizeMult, level - 1);
   if (d.behavior === 'giant') {
     hp *= mods.giantHp;
     size *= mods.giantSize;

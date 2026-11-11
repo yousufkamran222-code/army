@@ -481,6 +481,11 @@ export class Battle {
     }
   }
 
+  /** debug: destroy the enemy statue */
+  forceWin() {
+    if (!this.finished) this.hitStatue(1, this.statueHp[1] + 1);
+  }
+
   private hitStatue(side: number, amt: number) {
     if (this.statueHp[side] <= 0) return;
     this.statueHp[side] -= amt;
